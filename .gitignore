@@ -1,3 +1,7 @@
+.bashrc
+.inputrc
+.Xauthority
+.cache/
 *.o
 *.o.d
 lib/mstch/CMakeFiles/*

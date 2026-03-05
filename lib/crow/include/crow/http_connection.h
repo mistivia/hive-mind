@@ -183,7 +183,7 @@ namespace crow
     {
     public:
         Connection(
-            boost::asio::io_service& io_service, 
+            boost::asio::io_context& io_service, 
             Handler* handler, 
             const std::string& server_name,
             std::tuple<Middlewares...>* middlewares,
@@ -583,7 +583,7 @@ namespace crow
         std::string date_str_;
         std::string res_body_copy_;
 
-        //boost::asio::deadline_timer deadline_;
+        //boost::asio::steady_timer deadline_;
         detail::dumb_timer_queue::key timer_cancel_key_;
 
         bool is_reading{};
