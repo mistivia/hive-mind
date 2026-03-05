@@ -21,8 +21,8 @@ crow::query_string get_parsed_param(const std::string &body) {
 int main(int argc, char** argv)
 {
     crow::App<crow::CookieParser> app;
-    load_text_resource("./resource/index.html", "index");
-    load_text_resource("./resource/session.html", "session");
+    load_text_resource("index.html", "index");
+    load_text_resource("session.html", "session");
     init_card_db();
 
     CROW_ROUTE(app, "/")([&](const crow::request& req){

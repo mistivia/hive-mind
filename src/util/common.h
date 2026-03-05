@@ -25,6 +25,7 @@ std::string gen_random();
 std::string url_encode(const std::string &s);
 std::string url_decode(const std::string &s);
 std::string html_encode(const std::string& data);
+std::string resolve_resource_path(const std::string& filename);
 
 void load_text_resource(std::string filename, std::string key);
 const std::string &get_text_resource(std::string key);

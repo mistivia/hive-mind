@@ -6,6 +6,7 @@
 #include <sstream>
 #include <map>
 #include <cstdio>
+#include <cstdlib>
 
 std::string gen_random()
 {
@@ -98,8 +99,26 @@ std::string html_encode(const std::string& data) {
 static std::map<std::string, std::string> text_resource;
 static std::string empty{};
 
+std::string resolve_resource_path(const std::string& filename) {
+    const std::string default_prefix = "./resource/";
+    const char* env_dir = std::getenv("HIVEMIND_RESOURCE");
+    if (env_dir != nullptr) {
+        std::string candidate = std::string(env_dir);
+        if (!candidate.empty() && candidate.back() != '/') {
+            candidate += '/';
+        }
+        candidate += filename;
+
+        std::ifstream f(candidate);
+        if (f.good()) {
+            return candidate;
+        }
+    }
+    return default_prefix + filename;
+}
+
 void load_text_resource(std::string filename, std::string key) {
-    std::ifstream t(filename);
+    std::ifstream t(resolve_resource_path(filename));
     std::stringstream buffer;
     buffer << t.rdbuf();
     text_resource[key] = buffer.str();

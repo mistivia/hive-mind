@@ -8,7 +8,7 @@
 static std::map<std::string, Card> card_db;
 
 void init_card_db(){
-    auto fs = std::ifstream{"./resource/mtgzhs"};
+    auto fs = std::ifstream{resolve_resource_path("mtgzhs")};
     std::string line;
     while(std::getline(fs, line, '\n')) {
         Card card;
