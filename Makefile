@@ -11,7 +11,7 @@ all: hivemind
 
 lib/mstch/src/libmstch.a:
 	cd lib/mstch && \
-	cmake . && \
+	cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ . && \
 	make
 
 hivemind: $(OBJ) lib/mstch/src/libmstch.a

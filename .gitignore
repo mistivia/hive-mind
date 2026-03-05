@@ -2,6 +2,7 @@
 .inputrc
 .Xauthority
 .cache/
+result
 *.o
 *.o.d
 lib/mstch/CMakeFiles/*
