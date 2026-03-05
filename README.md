@@ -1,12 +1,12 @@
 # HiveMind
 
-万智牌轮抽工具
+A Magic: The Gathering draft tool
 
-## 依赖
+## Dependencies
 
 - Boost
 
-## 构建和运行
+## Build and Run
 
 ```
 git clone https://github.com/mistivia/hive-mind.git
@@ -14,9 +14,9 @@ cd hive-mind
 make && ./hivemind
 ```
 
-## 鸣谢
+## Acknowledgements
 
-HiveMind使用了来自下面两个库的代码
+HiveMind uses code from the following two libraries:
 
 - [Crow](https://github.com/ipkn/crow)
 - [mstch](https://github.com/no1msd/mstch)
