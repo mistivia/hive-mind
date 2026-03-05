@@ -45,12 +45,15 @@ class Session {
     void validate_creator(Arc<User> user);
     void validate_session_state(SessionState state);
 
+    static void ensure_cleanup_thread_started();
+    static void cleanup_expired_sessions();
+
     std::string session_id;
     int player_num;
     SessionState session_state = SessionState::pending;
     std::vector<Arc<UserState>> users;
     std::queue<Arc<Card>> remained_cards;
-    std::chrono::time_point<std::chrono::system_clock> time_created;
+    std::chrono::time_point<std::chrono::system_clock> created_at;
     int round_num = 0;
     std::mutex lock;
 };

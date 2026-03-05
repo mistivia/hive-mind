@@ -1,9 +1,11 @@
 #include "core/session.h"
 
 #include <algorithm>
+#include <thread>
 
 static std::map<std::string, Arc<Session>> session_map;
 static std::mutex session_map_lock;
+static std::once_flag session_cleanup_thread_once;
 
 std::string to_string(SessionState state) {
     switch(state) {
@@ -14,7 +16,31 @@ std::string to_string(SessionState state) {
     return "";
 };
 
+void Session::ensure_cleanup_thread_started() {
+    std::call_once(session_cleanup_thread_once, []() {
+        std::thread([]() {
+            while (true) {
+                std::this_thread::sleep_for(std::chrono::minutes(15));
+                Session::cleanup_expired_sessions();
+            }
+        }).detach();
+    });
+}
+
+void Session::cleanup_expired_sessions() {
+    ulock _l{session_map_lock};
+    auto now = std::chrono::system_clock::now();
+    for (auto it = session_map.begin(); it != session_map.end();) {
+        if (now - it->second->created_at > std::chrono::hours(24)) {
+            it = session_map.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 Arc<Session> Session::create_session(Arc<User> creator, std::vector<Arc<Card>> &card_list, int player_num) {
+    ensure_cleanup_thread_started();
     ulock _l{session_map_lock};
 
     if(player_num < 1) {
@@ -27,7 +53,7 @@ Arc<Session> Session::create_session(Arc<User> creator, std::vector<Arc<Card>> &
     auto session = make_shared<Session>();
     session->player_num = player_num;
     session->session_id = gen_random();
-    session->time_created = std::chrono::system_clock::now();
+    session->created_at = std::chrono::system_clock::now();
     
     auto user_state = make_shared<UserState>();
     user_state->is_creator = true;
@@ -47,6 +73,7 @@ Arc<Session> Session::create_session(Arc<User> creator, std::vector<Arc<Card>> &
 }
 
 Arc<Session> Session::get_session(const std::string &session_id) {
+    ensure_cleanup_thread_started();
     ulock _l{session_map_lock};
 
     if (session_map.find(session_id) == session_map.end()) {
